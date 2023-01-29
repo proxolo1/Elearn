@@ -1,16 +1,16 @@
 package com.learn.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
 @Entity
-@Data
-@NoArgsConstructor
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
+
 @AllArgsConstructor
 public class Role {
     @Id
@@ -18,5 +18,9 @@ public class Role {
     private long id;
     private String name;
     @OneToMany(mappedBy = "role")
+    @ToString.Exclude
     private List<User> users;
+
+
+
 }
