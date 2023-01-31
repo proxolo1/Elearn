@@ -1,23 +1,26 @@
-C:\Users\ajayk\OneDrive\Desktop\e-learn 3.0.1\Elearn\src\main\java\com\learn\config\CustomUserDetailsService.java
-C:\Users\ajayk\OneDrive\Desktop\e-learn 3.0.1\Elearn\src\main\java\com\learn\filter\JwtFilter.java
-C:\Users\ajayk\OneDrive\Desktop\e-learn 3.0.1\Elearn\src\main\java\com\learn\dto\AuthRequest.java
-C:\Users\ajayk\OneDrive\Desktop\e-learn 3.0.1\Elearn\src\main\java\com\learn\service\JwtService.java
-C:\Users\ajayk\OneDrive\Desktop\e-learn 3.0.1\Elearn\src\main\java\com\learn\repo\UserRepository.java
-C:\Users\ajayk\OneDrive\Desktop\e-learn 3.0.1\Elearn\src\main\java\com\learn\model\Course.java
-C:\Users\ajayk\OneDrive\Desktop\e-learn 3.0.1\Elearn\src\main\java\com\learn\exception\ResourceNotFoundException.java
-C:\Users\ajayk\OneDrive\Desktop\e-learn 3.0.1\Elearn\src\main\java\com\learn\service\AuthService.java
-C:\Users\ajayk\OneDrive\Desktop\e-learn 3.0.1\Elearn\src\main\java\com\learn\exception\GlobalExceptionHandler.java
-C:\Users\ajayk\OneDrive\Desktop\e-learn 3.0.1\Elearn\src\main\java\com\learn\model\User.java
-C:\Users\ajayk\OneDrive\Desktop\e-learn 3.0.1\Elearn\src\main\java\com\learn\model\Role.java
-C:\Users\ajayk\OneDrive\Desktop\e-learn 3.0.1\Elearn\src\main\java\com\learn\repo\CourseRepository.java
-C:\Users\ajayk\OneDrive\Desktop\e-learn 3.0.1\Elearn\src\main\java\com\learn\controller\CourseController.java
-C:\Users\ajayk\OneDrive\Desktop\e-learn 3.0.1\Elearn\src\main\java\com\learn\dto\AuthResponse.java
-C:\Users\ajayk\OneDrive\Desktop\e-learn 3.0.1\Elearn\src\main\java\com\learn\repo\RoleRepository.java
-C:\Users\ajayk\OneDrive\Desktop\e-learn 3.0.1\Elearn\src\main\java\com\learn\constants\RoleEnum.java
-C:\Users\ajayk\OneDrive\Desktop\e-learn 3.0.1\Elearn\src\main\java\com\learn\exception\EmailAlreadyExistException.java
-C:\Users\ajayk\OneDrive\Desktop\e-learn 3.0.1\Elearn\src\main\java\com\learn\exception\ErrorDetails.java
-C:\Users\ajayk\OneDrive\Desktop\e-learn 3.0.1\Elearn\src\main\java\com\learn\config\SecurityConfig.java
-C:\Users\ajayk\OneDrive\Desktop\e-learn 3.0.1\Elearn\src\main\java\com\learn\exception\JwtTokenExpireException.java
-C:\Users\ajayk\OneDrive\Desktop\e-learn 3.0.1\Elearn\src\main\java\com\learn\LearnApplication.java
-C:\Users\ajayk\OneDrive\Desktop\e-learn 3.0.1\Elearn\src\main\java\com\learn\service\CourseService.java
-C:\Users\ajayk\OneDrive\Desktop\e-learn 3.0.1\Elearn\src\main\java\com\learn\controller\AuthController.java
+C:\Users\194883\Desktop\indivitual project - e learn\e-learn-spring-boot-main\Elearn\src\main\java\com\learn\config\SecurityConfig.java
+C:\Users\194883\Desktop\indivitual project - e learn\e-learn-spring-boot-main\Elearn\src\main\java\com\learn\exception\ErrorDetails.java
+C:\Users\194883\Desktop\indivitual project - e learn\e-learn-spring-boot-main\Elearn\src\main\java\com\learn\LearnApplication.java
+C:\Users\194883\Desktop\indivitual project - e learn\e-learn-spring-boot-main\Elearn\src\main\java\com\learn\model\User.java
+C:\Users\194883\Desktop\indivitual project - e learn\e-learn-spring-boot-main\Elearn\src\main\java\com\learn\exception\GlobalExceptionHandler.java
+C:\Users\194883\Desktop\indivitual project - e learn\e-learn-spring-boot-main\Elearn\src\main\java\com\learn\model\Course.java
+C:\Users\194883\Desktop\indivitual project - e learn\e-learn-spring-boot-main\Elearn\src\main\java\com\learn\repo\UserRepository.java
+C:\Users\194883\Desktop\indivitual project - e learn\e-learn-spring-boot-main\Elearn\src\main\java\com\learn\config\SwaggerConfig.java
+C:\Users\194883\Desktop\indivitual project - e learn\e-learn-spring-boot-main\Elearn\src\main\java\com\learn\dto\AuthResponse.java
+C:\Users\194883\Desktop\indivitual project - e learn\e-learn-spring-boot-main\Elearn\src\main\java\com\learn\repo\CourseRepository.java
+C:\Users\194883\Desktop\indivitual project - e learn\e-learn-spring-boot-main\Elearn\src\main\java\com\learn\dto\JwtResponse.java
+C:\Users\194883\Desktop\indivitual project - e learn\e-learn-spring-boot-main\Elearn\src\main\java\com\learn\filter\JwtFilter.java
+C:\Users\194883\Desktop\indivitual project - e learn\e-learn-spring-boot-main\Elearn\src\main\java\com\learn\exception\ResourceNotFoundException.java
+C:\Users\194883\Desktop\indivitual project - e learn\e-learn-spring-boot-main\Elearn\src\main\java\com\learn\service\AuthService.java
+C:\Users\194883\Desktop\indivitual project - e learn\e-learn-spring-boot-main\Elearn\src\main\java\com\learn\exception\JwtTokenExpireException.java
+C:\Users\194883\Desktop\indivitual project - e learn\e-learn-spring-boot-main\Elearn\src\main\java\com\learn\model\Role.java
+C:\Users\194883\Desktop\indivitual project - e learn\e-learn-spring-boot-main\Elearn\src\main\java\com\learn\exception\EmailAlreadyExistException.java
+C:\Users\194883\Desktop\indivitual project - e learn\e-learn-spring-boot-main\Elearn\src\main\java\com\learn\config\CustomUserDetailsService.java
+C:\Users\194883\Desktop\indivitual project - e learn\e-learn-spring-boot-main\Elearn\src\main\java\com\learn\service\JwtService.java
+C:\Users\194883\Desktop\indivitual project - e learn\e-learn-spring-boot-main\Elearn\src\main\java\com\learn\dto\AuthRequest.java
+C:\Users\194883\Desktop\indivitual project - e learn\e-learn-spring-boot-main\Elearn\src\main\java\com\learn\repo\RoleRepository.java
+C:\Users\194883\Desktop\indivitual project - e learn\e-learn-spring-boot-main\Elearn\src\main\java\com\learn\util\ValidationUtil.java
+C:\Users\194883\Desktop\indivitual project - e learn\e-learn-spring-boot-main\Elearn\src\main\java\com\learn\controller\CourseController.java
+C:\Users\194883\Desktop\indivitual project - e learn\e-learn-spring-boot-main\Elearn\src\main\java\com\learn\service\CourseService.java
+C:\Users\194883\Desktop\indivitual project - e learn\e-learn-spring-boot-main\Elearn\src\main\java\com\learn\constants\RoleEnum.java
+C:\Users\194883\Desktop\indivitual project - e learn\e-learn-spring-boot-main\Elearn\src\main\java\com\learn\controller\AuthController.java

@@ -8,6 +8,6 @@ import lombok.Data;
 @Builder
 @AllArgsConstructor
 public class AuthResponse {
-    private String message;
-    private boolean access;
+    public String message;
+    public boolean access;
 }

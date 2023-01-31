@@ -6,6 +6,8 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -16,15 +18,18 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Component
+
 public class JwtService {
+    private static final Logger log = LoggerFactory.getLogger(JwtService.class);
     public static final String SECRET = "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437";
 
-
     public String extractUsername(String token) {
+        log.info("Extracting username from token.");
         return extractClaim(token, Claims::getSubject);
     }
 
     public Date extractExpiration(String token) {
+        log.info("Extracting expiration from token.");
         return extractClaim(token, Claims::getExpiration);
     }
 
@@ -34,6 +39,7 @@ public class JwtService {
     }
 
     private Claims extractAllClaims(String token) {
+        log.info("Extracting all claims from token.");
         return Jwts
                 .parserBuilder()
                 .setSigningKey(getSignKey())
@@ -43,24 +49,28 @@ public class JwtService {
     }
 
     private Boolean isTokenExpired(String token) {
+        log.info("Checking if token is expired.");
         return extractExpiration(token).before(new Date());
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {
+        log.info("Validating token.");
         final String username = extractUsername(token);
         if(Boolean.TRUE.equals(isTokenExpired(token))){
+            log.error("Token has expired.");
             throw new JwtTokenExpireException("TOKEN EXPIRED");
         }
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
-
     public String generateToken(String userName){
+        log.info("Generating new token for user: {}", userName);
         Map<String,Object> claims=new HashMap<>();
         return createToken(claims,userName);
     }
 
     private String createToken(Map<String, Object> claims, String userName) {
+        log.info("Creating token for user: {}", userName);
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(userName)
@@ -70,7 +80,9 @@ public class JwtService {
     }
 
     private Key getSignKey() {
+        log.info("Getting sign key.");
         byte[] keyBytes= Decoders.BASE64.decode(SECRET);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }
+

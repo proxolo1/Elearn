@@ -1,5 +1,6 @@
 package com.learn.exception;
 
+import com.learn.service.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -20,9 +21,10 @@ public class GlobalExceptionHandler {
         );
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
+
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorDetails> handleResourceNotFoundException(ResourceNotFoundException exception,
-                                                                        WebRequest webRequest){
+                                                                        WebRequest webRequest) {
 
         ErrorDetails errorDetails = new ErrorDetails(
                 LocalDateTime.now(),
@@ -33,6 +35,7 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
+
     @ExceptionHandler(JwtTokenExpireException.class)
     public ResponseEntity<ErrorDetails> handleResourceNotFoundException(JwtTokenExpireException exception,
                                                                         WebRequest webRequest) {
@@ -44,5 +47,17 @@ public class GlobalExceptionHandler {
         );
         return new ResponseEntity<>(errorDetails, HttpStatus.UNAUTHORIZED);
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorDetails> handleIllegalArgumentException(IllegalArgumentException exception,
+                                                                       WebRequest webRequest) {
+        ErrorDetails errorDetails = new ErrorDetails(
+                LocalDateTime.now(),
+                exception.getMessage(),
+                webRequest.getDescription(false),
+                "ILLEGAL ARGUMENT"
+        );
+        return new ResponseEntity<>(errorDetails, HttpStatus.UNAUTHORIZED);
     }
+}
 

@@ -3,10 +3,14 @@ package com.learn.controller;
 import com.learn.dto.AuthResponse;
 import com.learn.model.Course;
 import com.learn.service.CourseService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 @RestController
@@ -14,20 +18,34 @@ import java.util.List;
 public class CourseController {
     @Autowired
     private CourseService courseService;
-@GetMapping("all-courses")
-    public ResponseEntity<List<Course>> allCourses(){
-    return courseService.getCourseList();
-}
-@PostMapping("add-course")
-    public ResponseEntity<AuthResponse> addCourse(@RequestBody Course course){
+    final Logger logger = LoggerFactory.getLogger(CourseController.class);
+    @GetMapping("course")
+    public ResponseEntity<List<Course>> allCourses() {
+        logger.info("Received a request to the endpoint '/GET Course'");
+        return courseService.getAllCourses();
+    }
+
+    @GetMapping("course/{courseName}")
+    public ResponseEntity<Course> getCourseByName(@PathVariable String courseName) {
+        logger.info("Received a request to the endpoint '/GET {}'",courseName);
+        return courseService.getCourseByName(courseName);
+    }
+
+    @PostMapping("course")
+    public ResponseEntity<AuthResponse> addCourse(@RequestBody Course course) throws InvocationTargetException, IllegalAccessException {
+        logger.info("Received a request to the endpoint '/POST {}'",course);
         return courseService.addCourse(course);
     }
-    @PutMapping("update-course/{courseName}")
-    public ResponseEntity<AuthResponse>updateCourse(@PathVariable String courseName,@RequestBody Course updatedCourse){
-    return courseService.updateCourse(courseName,updatedCourse);
+
+    @PutMapping("course/{id}")
+    public ResponseEntity<AuthResponse> updateCourse(@PathVariable Long id, @RequestBody Course newCourse) throws InvocationTargetException, IllegalAccessException {
+        logger.info("Received a request to the endpoint '/PUT with id :{} and Course :{}'",id,newCourse);
+        return courseService.updateCourse(id, newCourse);
     }
-    @DeleteMapping("delete-course/{courseName}")
-    public ResponseEntity<AuthResponse>deleteCourse(@PathVariable String courseName){
-    return courseService.deleteCourse(courseName);
+
+    @DeleteMapping("course/{id}")
+    public ResponseEntity<AuthResponse> deleteCourse(@PathVariable Long id) {
+        logger.info("Received a request to the endpoint '/DELETE with id {}'",id);
+        return courseService.deleteCourse(id);
     }
 }

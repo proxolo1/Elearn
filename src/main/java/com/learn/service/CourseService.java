@@ -6,60 +6,81 @@ import com.learn.model.Course;
 import com.learn.model.User;
 import com.learn.repo.CourseRepository;
 import com.learn.repo.UserRepository;
+import com.learn.util.ValidationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 @Service
 public class CourseService {
+    static final String COURSE="COURSE";
     final Logger logger = LoggerFactory.getLogger(CourseService.class);
     @Autowired
     private CourseRepository courseRepository;
     @Autowired
     private UserRepository userRepository;
 
-    public ResponseEntity<List<Course>> getCourseList() {
-        logger.info("all course list");
+    public ResponseEntity<List<Course>> getAllCourses() {
+        logger.info("Getting all courses");
         return ResponseEntity.ok(courseRepository.findAll());
     }
 
-    public ResponseEntity<AuthResponse> addCourse(Course course) {
-        try {
-            logger.info("added course");
-            courseRepository.save(course);
-            return ResponseEntity.ok(new AuthResponse(course.getName() + " added successfully", true));
-        } catch (Exception e) {
-            throw new ResourceNotFoundException("course", e.getMessage(), "creating new course error");
+    public ResponseEntity<AuthResponse> addCourse(Course newCourse) throws InvocationTargetException, IllegalAccessException {
+        if (ValidationUtil.isBlank(newCourse)) {
+            logger.error("new course fields are empty");
+            throw new IllegalArgumentException("new course fields cannot be empty");
         }
-
-
+        if (courseRepository.existsByNameAndTrainer(newCourse.getName(), newCourse.getTrainer())) {
+            throw new ResourceNotFoundException(newCourse.getName(), " already registered");
+        }
+        logger.info("Adding new course");
+        courseRepository.save(newCourse);
+        return ResponseEntity.ok(new AuthResponse(newCourse.getName() + " added successfully", true));
     }
 
-    public ResponseEntity<AuthResponse> updateCourse(String courseName, Course updatedCourse) {
-        Course oldCourse = courseRepository.findById(courseName).orElseThrow(() -> new ResourceNotFoundException("Course", courseName, "not exist"));
-        oldCourse.setName(updatedCourse.getName());
-        oldCourse.setDescription(updatedCourse.getDescription());
-        oldCourse.setDuration(updatedCourse.getDuration());
-        oldCourse.setNoOfRegistrations(updatedCourse.getNoOfRegistrations());
-        oldCourse.setMaxRegistrations(updatedCourse.getMaxRegistrations());
-        courseRepository.save(oldCourse);
-        logger.info("updated course");
-        return ResponseEntity.ok(new AuthResponse(String.format("%s is updated", courseName), true));
+    public ResponseEntity<AuthResponse> updateCourse(long id, Course updatedCourse) throws InvocationTargetException, IllegalAccessException {
+        if (ValidationUtil.isBlank(updatedCourse) &&ValidationUtil.isBlank(id)) {
+            logger.error("updateCourse id or course fields is empty");
+            throw new IllegalArgumentException("id or course is have empty fields");
+        }
+        Course existingCourse = courseRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(COURSE, String.valueOf(id), "course not exist"));
+        existingCourse.setName(updatedCourse.getName());
+        existingCourse.setDescription(updatedCourse.getDescription());
+        existingCourse.setDuration(updatedCourse.getDuration());
+        existingCourse.setNoOfRegistrations(updatedCourse.getNoOfRegistrations());
+        existingCourse.setMaxRegistrations(updatedCourse.getMaxRegistrations());
+        courseRepository.save(existingCourse);
+        logger.info("Updating course");
+        return ResponseEntity.ok(new AuthResponse(existingCourse.getName() + " updated successfully", true));
     }
 
-    public ResponseEntity<AuthResponse> deleteCourse(String courseName) {
-        Course course = courseRepository.findById(courseName).orElseThrow(() -> new ResourceNotFoundException("Course", courseName, "not exist"));
-        logger.info("deleted course");
-        courseRepository.delete(course);
-        return ResponseEntity.ok(new AuthResponse(String.format("%s is deleted", courseName), true));
+    public ResponseEntity<AuthResponse> deleteCourse(long id) {
+        if (ValidationUtil.isBlank(id)) {
+            logger.error("course id is empty");
+            throw new IllegalArgumentException("course id should not be empty");
+        }
+        Course courseToDelete = courseRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(COURSE, String.valueOf(id), "not exist"));
+        logger.info("Deleting course");
+        courseRepository.delete(courseToDelete);
+        return ResponseEntity.ok(new AuthResponse(courseToDelete.getName() + " deleted successfully", true));
     }
 
-    public String enrollCourse(String email, String courseName) {
-        Course course = courseRepository.findById(courseName).orElseThrow();
+    public ResponseEntity<Course> getCourseByName(String courseName) {
+        if(ValidationUtil.isBlank(courseName)){
+            logger.error("course name is empty");
+            throw new IllegalArgumentException("course empty is empty");
+        }
+        Course course = courseRepository.findByName(courseName).orElseThrow(() -> new ResourceNotFoundException(COURSE, courseName, "not exist"));
+        return ResponseEntity.ok(course);
+    }
+
+    public String enrollCourse(String email, Long id) {
+        Course course = courseRepository.findById(id).orElseThrow();
         User user = userRepository.findByEmail(email).orElseThrow();
 
         if (course.getUsers().contains(user)) {
@@ -70,9 +91,5 @@ public class CourseService {
         course.getUsers().add(user);
         courseRepository.save(course);
         return user.getEmail() + " successfully enrolled";
-    }
-
-    public Course getCourse(String courseName) {
-        return courseRepository.findById(courseName).orElseThrow();
     }
 }

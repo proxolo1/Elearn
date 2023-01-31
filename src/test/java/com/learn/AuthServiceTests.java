@@ -22,6 +22,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.management.relation.RoleNotFoundException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -46,7 +48,7 @@ class AuthServiceTests {
     private JwtService jwtService;
     @Test
 
-    void test_registerUser(){
+    void test_registerUser() throws InvocationTargetException, IllegalAccessException {
         List<User> users = new ArrayList<>();
         Optional<Role> role= Optional.of(new Role(1, "ROLE_USER", users));
         User user=new User(1,"ajay","santhosh","ajayksanthosh.15@gmail.com","Developer","9895774705","ajay",role.get());
