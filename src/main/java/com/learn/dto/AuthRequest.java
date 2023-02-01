@@ -15,4 +15,6 @@ public class AuthRequest {
     private String jobTitle;
     private String phoneNumber;
     private String password;
+
+
 }

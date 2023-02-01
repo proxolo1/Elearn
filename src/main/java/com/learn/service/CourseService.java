@@ -1,11 +1,13 @@
 package com.learn.service;
 
 import com.learn.dto.AuthResponse;
+import com.learn.dto.CourseDto;
 import com.learn.exception.ResourceNotFoundException;
 import com.learn.model.Course;
 import com.learn.model.User;
 import com.learn.repo.CourseRepository;
 import com.learn.repo.UserRepository;
+import com.learn.util.CourseDtoToCourseEntity;
 import com.learn.util.ValidationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,20 +32,20 @@ public class CourseService {
         return ResponseEntity.ok(courseRepository.findAll());
     }
 
-    public ResponseEntity<AuthResponse> addCourse(Course newCourse) throws InvocationTargetException, IllegalAccessException {
+    public ResponseEntity<AuthResponse> addCourse(CourseDto newCourse) throws InvocationTargetException, IllegalAccessException {
+        if (courseRepository.existsByNameAndTrainer(newCourse.getName(), newCourse.getTrainer())) {
+            throw new ResourceNotFoundException(newCourse.getName(), " already registered");
+        }
         if (ValidationUtil.isBlank(newCourse)) {
             logger.error("new course fields are empty");
             throw new IllegalArgumentException("new course fields cannot be empty");
         }
-        if (courseRepository.existsByNameAndTrainer(newCourse.getName(), newCourse.getTrainer())) {
-            throw new ResourceNotFoundException(newCourse.getName(), " already registered");
-        }
         logger.info("Adding new course");
-        courseRepository.save(newCourse);
+        courseRepository.save(CourseDtoToCourseEntity.convert(newCourse));
         return ResponseEntity.ok(new AuthResponse(newCourse.getName() + " added successfully", true));
     }
 
-    public ResponseEntity<AuthResponse> updateCourse(long id, Course updatedCourse) throws InvocationTargetException, IllegalAccessException {
+    public ResponseEntity<AuthResponse> updateCourse(long id, CourseDto updatedCourse) throws InvocationTargetException, IllegalAccessException {
         if (ValidationUtil.isBlank(updatedCourse) &&ValidationUtil.isBlank(id)) {
             logger.error("updateCourse id or course fields is empty");
             throw new IllegalArgumentException("id or course is have empty fields");
@@ -79,17 +81,17 @@ public class CourseService {
         return ResponseEntity.ok(course);
     }
 
-    public String enrollCourse(String email, Long id) {
+    public ResponseEntity<AuthResponse> enrollCourse(String email, Long id) {
         Course course = courseRepository.findById(id).orElseThrow();
         User user = userRepository.findByEmail(email).orElseThrow();
 
         if (course.getUsers().contains(user)) {
-            return user.getFirstName() + " already enrolled " + course.getName();
+            return ResponseEntity.ok(new AuthResponse(user.getFirstName() + " already enrolled " + course.getName(),true));
         }
         course.setNoOfRegistrations(course.getNoOfRegistrations() + 1);
 
         course.getUsers().add(user);
         courseRepository.save(course);
-        return user.getEmail() + " successfully enrolled";
+        return ResponseEntity.ok(new AuthResponse(user.getEmail() + " successfully enrolled",true));
     }
 }

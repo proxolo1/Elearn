@@ -1,6 +1,7 @@
 package com.learn.controller;
 
 import com.learn.dto.AuthResponse;
+import com.learn.dto.CourseDto;
 import com.learn.model.Course;
 import com.learn.service.CourseService;
 import org.slf4j.Logger;
@@ -32,13 +33,13 @@ public class CourseController {
     }
 
     @PostMapping("course")
-    public ResponseEntity<AuthResponse> addCourse(@RequestBody Course course) throws InvocationTargetException, IllegalAccessException {
+    public ResponseEntity<AuthResponse> addCourse(@RequestBody CourseDto course) throws InvocationTargetException, IllegalAccessException {
         logger.info("Received a request to the endpoint '/POST {}'",course);
         return courseService.addCourse(course);
     }
 
     @PutMapping("course/{id}")
-    public ResponseEntity<AuthResponse> updateCourse(@PathVariable Long id, @RequestBody Course newCourse) throws InvocationTargetException, IllegalAccessException {
+    public ResponseEntity<AuthResponse> updateCourse(@PathVariable Long id, @RequestBody CourseDto newCourse) throws InvocationTargetException, IllegalAccessException {
         logger.info("Received a request to the endpoint '/PUT with id :{} and Course :{}'",id,newCourse);
         return courseService.updateCourse(id, newCourse);
     }
@@ -47,5 +48,9 @@ public class CourseController {
     public ResponseEntity<AuthResponse> deleteCourse(@PathVariable Long id) {
         logger.info("Received a request to the endpoint '/DELETE with id {}'",id);
         return courseService.deleteCourse(id);
+    }
+    @GetMapping("enroll-course")
+    public ResponseEntity<AuthResponse> enrollCourse(@RequestParam("id") Long id,@RequestParam("email") String email){
+        return courseService.enrollCourse(email,id);
     }
 }

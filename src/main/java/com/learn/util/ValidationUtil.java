@@ -1,6 +1,7 @@
 package com.learn.util;
 
 
+import com.learn.dto.CourseDto;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.InvocationTargetException;
@@ -18,6 +19,7 @@ public class ValidationUtil {
         return name.isBlank();
     }
     public static boolean isBlank(Object input) throws InvocationTargetException, IllegalAccessException {
+
         Method[] methods = input.getClass().getDeclaredMethods();
         for(Method method:methods){
             if(method.getName().startsWith("get") && StringUtils.isBlank(method.invoke(input).toString())){
@@ -26,9 +28,11 @@ public class ValidationUtil {
         }
         return false;
     }
-
+    public static boolean isBlank(String email,String password){
+        return validateEmail(email)&&validatePassword(password);
+    }
     public static boolean validateEmail(String email) {
-        return email.matches("^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$");
+        return email.matches("^[a-zA-Z0-9_+&-]+(?:\\.[a-zA-Z0-9_+&-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$");
     }
 
     public static boolean validatePhoneNumber(String phoneNumber) {

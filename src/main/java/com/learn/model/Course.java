@@ -3,6 +3,7 @@ package com.learn.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Date;
 import java.util.Set;
 
 @Entity
@@ -19,10 +20,10 @@ public class Course {
     private String name;
     private String description;
     private String trainer;
-    private String duration;
+    private Date duration;
     private long maxRegistrations;
     private long noOfRegistrations;
-    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name="course_relationship",joinColumns = @JoinColumn(name="course_id",referencedColumnName = "id"),inverseJoinColumns =
     @JoinColumn(name="user_id",referencedColumnName = "id"))
     private Set<User> users;

@@ -55,6 +55,10 @@ public class AuthService {
             logger.error("request can't be null");
             throw new IllegalArgumentException("fields cannot be empty");
         }
+        if(!ValidationUtil.validateEmail(request.getEmail())){
+            logger.error("Invalid email format: {}", request.getEmail());
+            throw new IllegalArgumentException("Invalid email format");
+        }
         //check if phone number is valid
         if (!ValidationUtil.validatePhoneNumber(request.getPhoneNumber())) {
             logger.error("Invalid phone number format: {}", request.getPhoneNumber());
@@ -107,6 +111,10 @@ Must be at least 8 characters long.
      */
     public ResponseEntity<JwtResponse> loginUser(AuthRequest request) {
         try {
+            if(!ValidationUtil.isBlank(request.getEmail(),request.getPassword())){
+                logger.error("Invalid email or password format: {} , {}", request.getEmail(),request.getPassword());
+                throw new IllegalArgumentException("email or password invalid");
+            }
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
             logger.info("User logged in: {}", request.getEmail());
             return ResponseEntity.ok(new JwtResponse(jwtService.generateToken(request.getEmail()), request.getEmail(), true));
