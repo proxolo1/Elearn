@@ -1,12 +1,10 @@
 package com.learn.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -17,6 +15,5 @@ public class Role {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private long id;
     private String name;
-    @OneToMany(mappedBy = "role")
-    private List<User> users;
+
 }

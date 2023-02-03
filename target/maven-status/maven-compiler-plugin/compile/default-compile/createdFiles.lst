@@ -8,6 +8,7 @@ com\learn\exception\ResourceNotFoundException.class
 com\learn\model\Role.class
 com\learn\config\CustomUserDetailsService.class
 com\learn\repo\CourseRepository.class
+com\learn\util\ValidationUtil.class
 com\learn\model\Course.class
 com\learn\service\CourseService.class
 com\learn\service\JwtService.class
@@ -18,8 +19,12 @@ com\learn\exception\ErrorDetails.class
 com\learn\service\AuthService.class
 com\learn\dto\AuthResponse$AuthResponseBuilder.class
 com\learn\repo\RoleRepository.class
+com\learn\dto\JwtResponse.class
 com\learn\exception\EmailAlreadyExistException.class
+com\learn\util\CourseDtoToCourseEntity.class
 com\learn\dto\AuthRequest$AuthRequestBuilder.class
+com\learn\dto\CourseDto.class
 com\learn\constants\RoleEnum.class
 com\learn\dto\AuthRequest.class
+com\learn\config\SwaggerConfig.class
 com\learn\controller\AuthController.class
