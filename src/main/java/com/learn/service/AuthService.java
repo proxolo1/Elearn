@@ -105,22 +105,25 @@ Must be at least 8 characters long.
     /**
      * Logs in a user.
      *
-     * @param request the authentication request containing user email and password
+     * @param email password the authentication request containing user email and password
      * @return a response entity with a JWT token and success status
      * @throws ResourceNotFoundException if the user email or password is invalid
      */
-    public ResponseEntity<JwtResponse> loginUser(AuthRequest request) {
+    public ResponseEntity<JwtResponse> loginUser(String email,String password) {
         try {
-            if(!ValidationUtil.isBlank(request.getEmail(),request.getPassword())){
-                logger.error("Invalid email or password format: {} , {}", request.getEmail(),request.getPassword());
+            if(!ValidationUtil.isBlank(email,password)){
+                logger.error("Invalid email or password format: {} , {}",email,password);
                 throw new IllegalArgumentException("email or password invalid");
             }
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-            logger.info("User logged in: {}", request.getEmail());
-            return ResponseEntity.ok(new JwtResponse(jwtService.generateToken(request.getEmail()), request.getEmail(), true));
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
+            logger.info("User logged in: {}",email);
+            return ResponseEntity.ok(new JwtResponse(jwtService.generateToken(email), email, true));
         } catch (AuthenticationException ex) {
-            logger.error("Invalid credentials for email: {}", request.getEmail());
-            throw new ResourceNotFoundException("User", request.getEmail(), "Invalid email or password");
+            logger.error("Invalid credentials for email: {}",email);
+            throw new ResourceNotFoundException("User", email, "Invalid email or password");
         }
+    }
+    public ResponseEntity<User>getUser(String email){
+        return ResponseEntity.ok(userRepository.findByEmail(email).orElseThrow());
     }
 }

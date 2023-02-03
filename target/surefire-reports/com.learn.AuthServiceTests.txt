@@ -1,4 +1,18 @@
 -------------------------------------------------------------------------------
 Test set: com.learn.AuthServiceTests
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.595 s - in com.learn.AuthServiceTests
+Tests run: 2, Failures: 0, Errors: 2, Skipped: 0, Time elapsed: 25.31 s <<< FAILURE! - in com.learn.AuthServiceTests
+test_loginUser  Time elapsed: 0.571 s  <<< ERROR!
+java.lang.IllegalArgumentException: email or password invalid
+	at com.learn.AuthServiceTests.test_loginUser(AuthServiceTests.java:108)
+
+test_registerUser  Time elapsed: 0.242 s  <<< ERROR!
+java.lang.IllegalArgumentException: 
+ Must contain at least one lowercase letter
+Must contain at least one uppercase letter
+Must contain at least one digit
+Must contain at least one special character (@, $, !, %, *, ?, &)
+Must be at least 8 characters long
+
+	at com.learn.AuthServiceTests.test_registerUser(AuthServiceTests.java:61)
+

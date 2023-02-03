@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class CourseService {
@@ -56,6 +57,7 @@ public class CourseService {
         existingCourse.setDuration(updatedCourse.getDuration());
         existingCourse.setNoOfRegistrations(updatedCourse.getNoOfRegistrations());
         existingCourse.setMaxRegistrations(updatedCourse.getMaxRegistrations());
+        existingCourse.setTrainer(updatedCourse.getTrainer());
         courseRepository.save(existingCourse);
         logger.info("Updating course");
         return ResponseEntity.ok(new AuthResponse(existingCourse.getName() + " updated successfully", true));
@@ -82,8 +84,8 @@ public class CourseService {
     }
 
     public ResponseEntity<AuthResponse> enrollCourse(String email, Long id) {
-        Course course = courseRepository.findById(id).orElseThrow();
-        User user = userRepository.findByEmail(email).orElseThrow();
+        Course course = courseRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(COURSE, id.toString(), "not exist"));
+        User user = userRepository.findByEmail(email).orElseThrow(()->new ResourceNotFoundException("User",email,"not exist"));
 
         if (course.getUsers().contains(user)) {
             return ResponseEntity.ok(new AuthResponse(user.getFirstName() + " already enrolled " + course.getName(),true));
@@ -94,4 +96,5 @@ public class CourseService {
         courseRepository.save(course);
         return ResponseEntity.ok(new AuthResponse(user.getEmail() + " successfully enrolled",true));
     }
+
 }

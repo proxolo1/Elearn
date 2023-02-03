@@ -10,6 +10,7 @@ C:\Users\194883\Desktop\indivitual project - e learn\e-learn-spring-boot-main\El
 C:\Users\194883\Desktop\indivitual project - e learn\e-learn-spring-boot-main\Elearn\src\main\java\com\learn\repo\CourseRepository.java
 C:\Users\194883\Desktop\indivitual project - e learn\e-learn-spring-boot-main\Elearn\src\main\java\com\learn\dto\JwtResponse.java
 C:\Users\194883\Desktop\indivitual project - e learn\e-learn-spring-boot-main\Elearn\src\main\java\com\learn\filter\JwtFilter.java
+C:\Users\194883\Desktop\indivitual project - e learn\e-learn-spring-boot-main\Elearn\src\main\java\com\learn\util\CourseDtoToCourseEntity.java
 C:\Users\194883\Desktop\indivitual project - e learn\e-learn-spring-boot-main\Elearn\src\main\java\com\learn\exception\ResourceNotFoundException.java
 C:\Users\194883\Desktop\indivitual project - e learn\e-learn-spring-boot-main\Elearn\src\main\java\com\learn\service\AuthService.java
 C:\Users\194883\Desktop\indivitual project - e learn\e-learn-spring-boot-main\Elearn\src\main\java\com\learn\exception\JwtTokenExpireException.java
@@ -22,5 +23,6 @@ C:\Users\194883\Desktop\indivitual project - e learn\e-learn-spring-boot-main\El
 C:\Users\194883\Desktop\indivitual project - e learn\e-learn-spring-boot-main\Elearn\src\main\java\com\learn\util\ValidationUtil.java
 C:\Users\194883\Desktop\indivitual project - e learn\e-learn-spring-boot-main\Elearn\src\main\java\com\learn\controller\CourseController.java
 C:\Users\194883\Desktop\indivitual project - e learn\e-learn-spring-boot-main\Elearn\src\main\java\com\learn\service\CourseService.java
+C:\Users\194883\Desktop\indivitual project - e learn\e-learn-spring-boot-main\Elearn\src\main\java\com\learn\dto\CourseDto.java
 C:\Users\194883\Desktop\indivitual project - e learn\e-learn-spring-boot-main\Elearn\src\main\java\com\learn\constants\RoleEnum.java
 C:\Users\194883\Desktop\indivitual project - e learn\e-learn-spring-boot-main\Elearn\src\main\java\com\learn\controller\AuthController.java

@@ -32,7 +32,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(user.getEmail(),user.getPassword(),mapRolesToAuthority(user.getRole()));
     }
     private Collection<? extends GrantedAuthority> mapRolesToAuthority(Role roles) {
-        logger.info("map roles to authority {}",roles);
+        logger.info("map roles to authority");
         return Collections.singleton(new SimpleGrantedAuthority(roles.getName()));
     }
 }

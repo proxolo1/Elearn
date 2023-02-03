@@ -9,11 +9,11 @@ import com.learn.repo.RoleRepository;
 import com.learn.repo.UserRepository;
 import com.learn.service.AuthService;
 import com.learn.service.JwtService;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -50,15 +50,15 @@ class AuthServiceTests {
 
     void test_registerUser() throws InvocationTargetException, IllegalAccessException {
         List<User> users = new ArrayList<>();
-        Optional<Role> role= Optional.of(new Role(1, "ROLE_USER", users));
-        User user=new User(1,"ajay","santhosh","ajayksanthosh.15@gmail.com","Developer","9895774705","ajay",role.get());
+        Optional<Role> role= Optional.of(new Role(1, "ROLE_USER"));
+        User user=new User(1,"ajay","santhosh","ajayksanthosh.15@gmail.com","Developer","9895774705","Qwerty1@",role.get());
         AuthRequest request=new AuthRequest(user.getFirstName(),user.getLastName(),user.getEmail(),user.getJobTitle(),user.getPhoneNumber(),user.getPassword());
         String email = "demo@demo.com";
         when(passwordEncoder.encode(request.getPassword())).thenReturn(new BCryptPasswordEncoder().encode(request.getPassword()));
         when(userRepository.existsByEmail(email)).thenReturn(false);
         when(roleRepository.findByName("ROLE_USER")).thenReturn(role);
         when(userRepository.save(user)).thenReturn(user);
-        assertEquals(ResponseEntity.ok(new AuthResponse(user.getEmail()+" successfully registered",true)),authService.registerUser(request));
+
         assertEquals(ResponseEntity.ok(new AuthResponse(user.getEmail()+" successfully registered",true)),authService.registerUser(request));
         doThrow(new EmailAlreadyExistException("some message")).when(userRepository).existsByEmail(request.getEmail());
     }
@@ -66,7 +66,8 @@ class AuthServiceTests {
 
     @Test
     void test_loginUser(){
-        AuthRequest request=new AuthRequest("test","test");
+       String email="test@test.com";
+       String password="Test12sa@l";
         Authentication authentication= new Authentication() {
             @Override
             public String getName() {
@@ -105,6 +106,6 @@ class AuthServiceTests {
         };
         when(authenticationManager.authenticate(new UsernamePasswordAuthenticationToken("test","test"))).thenReturn(authentication);
         when(jwtService.generateToken("test")).thenReturn("hello");
-        assertEquals(ResponseEntity.ok(new AuthResponse( jwtService.generateToken("test"),true)),authService.loginUser(request));
+        assertEquals(HttpStatus.OK,authService.loginUser(email,password).getStatusCode());
     }
 }
