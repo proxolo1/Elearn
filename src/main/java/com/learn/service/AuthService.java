@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -50,6 +51,10 @@ public class AuthService {
      * @throws EmailAlreadyExistException if the email already exists in the system
      */
     public ResponseEntity<AuthResponse> registerUser(AuthRequest request) throws IllegalAccessException, InvocationTargetException {
+        if(request==null){
+            logger.error("request is null ");
+            throw new IllegalArgumentException("request empty");
+        }
         // check if request is empty
         if (ValidationUtil.isBlank(request)) {
             logger.error("request can't be null");
@@ -117,7 +122,7 @@ Must be at least 8 characters long.
             }
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
             logger.info("User logged in: {}",email);
-            return ResponseEntity.ok(new JwtResponse(jwtService.generateToken(email), email, true));
+            return ResponseEntity.ok(new JwtResponse(jwtService.generateToken(email), email, true,userRepository.findByEmail(email).orElseThrow().getRole().getName()));
         } catch (AuthenticationException ex) {
             logger.error("Invalid credentials for email: {}",email);
             throw new ResourceNotFoundException("User", email, "Invalid email or password");

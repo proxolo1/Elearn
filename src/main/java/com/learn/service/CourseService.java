@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class CourseService {
@@ -89,6 +88,9 @@ public class CourseService {
 
         if (course.getUsers().contains(user)) {
             return ResponseEntity.ok(new AuthResponse(user.getFirstName() + " already enrolled " + course.getName(),true));
+        }
+        if(course.getMaxRegistrations()<course.getNoOfRegistrations()){
+            return ResponseEntity.ok(new AuthResponse("course registration limit exceed",false));
         }
         course.setNoOfRegistrations(course.getNoOfRegistrations() + 1);
 

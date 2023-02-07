@@ -9,4 +9,6 @@ public class JwtResponse {
     private String token;
     private String email;
     private Boolean access;
+    private String role;
+
 }

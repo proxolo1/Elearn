@@ -1,14 +1,18 @@
 package com.learn;
 
+import com.learn.constants.RoleEnum;
 import com.learn.dto.AuthRequest;
 import com.learn.dto.AuthResponse;
+import com.learn.dto.JwtResponse;
 import com.learn.exception.EmailAlreadyExistException;
+import com.learn.exception.ResourceNotFoundException;
 import com.learn.model.Role;
 import com.learn.model.User;
 import com.learn.repo.RoleRepository;
 import com.learn.repo.UserRepository;
 import com.learn.service.AuthService;
 import com.learn.service.JwtService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -24,11 +28,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.management.relation.RoleNotFoundException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
+import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -49,63 +51,129 @@ class AuthServiceTests {
     @Test
 
     void test_registerUser() throws InvocationTargetException, IllegalAccessException {
-        List<User> users = new ArrayList<>();
-        Optional<Role> role= Optional.of(new Role(1, "ROLE_USER"));
-        User user=new User(1,"ajay","santhosh","ajayksanthosh.15@gmail.com","Developer","9895774705","Qwerty1@",role.get());
-        AuthRequest request=new AuthRequest(user.getFirstName(),user.getLastName(),user.getEmail(),user.getJobTitle(),user.getPhoneNumber(),user.getPassword());
-        String email = "demo@demo.com";
-        when(passwordEncoder.encode(request.getPassword())).thenReturn(new BCryptPasswordEncoder().encode(request.getPassword()));
-        when(userRepository.existsByEmail(email)).thenReturn(false);
-        when(roleRepository.findByName("ROLE_USER")).thenReturn(role);
-        when(userRepository.save(user)).thenReturn(user);
+        AuthRequest request = new AuthRequest();
+        request.setFirstName("John");
+        request.setLastName("Doe");
+        request.setEmail("johndoe@example.com");
+        request.setJobTitle("Software Engineer");
+        request.setPhoneNumber("1234567890");
+        request.setPassword("Test@12345");
+        Role role = new Role();
+        role.setName(RoleEnum.ROLE_USER.name());
+        when(roleRepository.findByName(RoleEnum.ROLE_USER.name())).thenReturn(Optional.of(role));
+        when(userRepository.existsByEmail(request.getEmail())).thenReturn(false);
+        when(passwordEncoder.encode(request.getPassword())).thenReturn("encoded_password");
 
-        assertEquals(ResponseEntity.ok(new AuthResponse(user.getEmail()+" successfully registered",true)),authService.registerUser(request));
-        doThrow(new EmailAlreadyExistException("some message")).when(userRepository).existsByEmail(request.getEmail());
+        ResponseEntity<AuthResponse> response = authService.registerUser(request);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("johndoe@example.com successfully registered", Objects.requireNonNull(response.getBody()).getMessage());
+        verify(userRepository, times(1)).save(any(User.class));
     }
-
-
     @Test
-    void test_loginUser(){
-       String email="test@test.com";
-       String password="Test12sa@l";
-        Authentication authentication= new Authentication() {
-            @Override
-            public String getName() {
-                return null;
-            }
+    void testNullRequest() throws Exception {
+        assertThrows(IllegalArgumentException.class,()->{
+            authService.registerUser(null);
+        });
 
-            @Override
-            public Collection<? extends GrantedAuthority> getAuthorities() {
-                return null;
-            }
+    }
+    @Test
+    void testInvalidEmail()throws Exception{
+        AuthRequest request = new AuthRequest();
+        request.setFirstName("John");
+        request.setLastName("Doe");
+        request.setEmail("invalid email");
+        request.setJobTitle("Software Engineer");
+        request.setPhoneNumber("1234567890");
+        request.setPassword("Test@12345");
+        assertThrows(IllegalArgumentException.class,()->{
+            authService.registerUser(request);
+        });
+    }
+    @Test
+     void testInvalidPhoneNumber() throws Exception {
+        AuthRequest request = new AuthRequest();
+        request.setFirstName("John");
+        request.setLastName("Doe");
+        request.setEmail("johndoe@example.com");
+        request.setJobTitle("Software Engineer");
+        request.setPhoneNumber("invalid phone number");
+        request.setPassword("Test@12345");
+        assertThrows(IllegalArgumentException.class,()->{
+            authService.registerUser(request);
+        });
+    }
+    @Test
+     void testInvalidPassword() throws Exception {
+        AuthRequest request = new AuthRequest();
+        request.setFirstName("John");
+        request.setLastName("Doe");
+        request.setEmail("johndoe@example.com");
+        request.setJobTitle("Software Engineer");
+        request.setPhoneNumber("1234567890");
+        request.setPassword("Test");
+        assertThrows(IllegalArgumentException.class,()->{
+            authService.registerUser(request);
+        });
 
-            @Override
-            public Object getCredentials() {
-                return null;
-            }
+    }
+    @Test
+     void testEmailAlreadyExists() throws Exception {
+        AuthRequest request = new AuthRequest();
+        request.setFirstName("John");
+        request.setLastName("Doe");
+        request.setEmail("johndoe@example.com");
+        request.setJobTitle("Software Engineer");
+        request.setPhoneNumber("1234567890");
+        request.setPassword("Test@12345");
+        when(userRepository.existsByEmail(request.getEmail())).thenReturn(true);
+        assertThrows(EmailAlreadyExistException.class,()->{
+            authService.registerUser(request);
+        });
 
-            @Override
-            public Object getDetails() {
-                return null;
-            }
+    }
+   @Test
+   void testForSuccessfulLogin() throws Exception {
+       String email = "test@email.com";
+       String password = "Password1@";
+       String role = "ROLE_ADMIN";
 
-            @Override
-            public Object getPrincipal() {
-                return null;
-            }
+       User user = new User();
+       user.setEmail(email);
+       user.setPassword(passwordEncoder.encode(password));
+       Role userRole = new Role();
+       userRole.setName(role);
+       user.setRole(userRole);
 
-            @Override
-            public boolean isAuthenticated() {
-                return false;
-            }
+       when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
+       when(authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password))).thenReturn(null);
+       when(jwtService.generateToken(email)).thenReturn("token");
 
-            @Override
-            public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
+       ResponseEntity<JwtResponse> response = authService.loginUser(email, password);
 
-            }
-        };
-        when(authenticationManager.authenticate(new UsernamePasswordAuthenticationToken("test","test"))).thenReturn(authentication);
-        when(jwtService.generateToken("test")).thenReturn("hello");
-        assertEquals(HttpStatus.OK,authService.loginUser(email,password).getStatusCode());
+       assertEquals(HttpStatus.OK, response.getStatusCode());
+       assertEquals(email, Objects.requireNonNull(response.getBody()).getEmail());
+       assertEquals(role, response.getBody().getRole());
+       Assertions.assertNotNull(response.getBody().getToken());
+   }
+    @Test
+    void testForIllegalArgumentException() {
+        String email = "";
+        String password = "";
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            authService.loginUser(email, password);
+        });
+    }
+    @Test
+    void testForAuthenticationException() {
+        String email = "test@email.com";
+        String password = "Password1@";
+
+        when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
+
+        assertThrows(NoSuchElementException.class, () -> {
+            authService.loginUser(email, password);
+        });
     }
 }

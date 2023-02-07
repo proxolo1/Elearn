@@ -12,13 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.management.relation.RoleNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 
-@CrossOrigin(origins="http://localhost:4200/")
 
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin
 public class AuthController {
     final Logger logger = LoggerFactory.getLogger(AuthController.class);
     @Autowired
