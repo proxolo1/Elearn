@@ -24,7 +24,9 @@ com\learn\exception\EmailAlreadyExistException.class
 com\learn\util\CourseDtoToCourseEntity.class
 com\learn\dto\AuthRequest$AuthRequestBuilder.class
 com\learn\dto\CourseDto.class
+com\learn\dto\LoginDto.class
 com\learn\constants\RoleEnum.class
+com\learn\LearnApplication$1.class
 com\learn\dto\AuthRequest.class
 com\learn\config\SwaggerConfig.class
 com\learn\controller\AuthController.class
