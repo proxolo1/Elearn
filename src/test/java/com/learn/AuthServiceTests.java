@@ -30,8 +30,8 @@
 //import java.lang.reflect.InvocationTargetException;
 //import java.util.*;
 //
-//import static org.junit.Assert.*;
 //import static org.junit.jupiter.api.Assertions.assertEquals;
+//import static org.junit.jupiter.api.Assertions.assertThrows;
 //import static org.mockito.Mockito.*;
 //
 //@SpringBootTest(classes = {AuthServiceTests.class})
@@ -50,7 +50,7 @@
 //    private JwtService jwtService;
 //    @Test
 //
-//    void test_registerUser() throws InvocationTargetException, IllegalAccessException {
+//    void test_registerUser() throws Exception {
 //        AuthRequest request = new AuthRequest();
 //        request.setFirstName("John");
 //        request.setLastName("Doe");

@@ -50,16 +50,18 @@ public class AuthService {
      * @return a response entity with a success message and status
      * @throws EmailAlreadyExistException if the email already exists in the system
      */
-    public ResponseEntity<AuthResponse> registerUser(AuthRequest request) throws IllegalAccessException, InvocationTargetException {
+    public ResponseEntity<AuthResponse> registerUser(AuthRequest request) throws Exception {
         if(request==null){
             logger.error("request is null ");
             throw new IllegalArgumentException("request empty");
         }
+
         // check if request is empty
         if (ValidationUtil.isBlank(request)) {
             logger.error("request can't be null");
             throw new IllegalArgumentException("fields cannot be empty");
         }
+        request.setPassword(ValidationUtil.decrypt(request.getPassword()));
         if(!ValidationUtil.validateEmail(request.getEmail())){
             logger.error("Invalid email format: {}", request.getEmail());
             throw new IllegalArgumentException("Invalid email format");
@@ -115,12 +117,14 @@ Must be at least 8 characters long.
      * @throws ResourceNotFoundException if the user email or password is invalid
      */
     public ResponseEntity<JwtResponse> loginUser(String email,String password) {
+
         try {
-            if(!ValidationUtil.isBlank(email,password)){
+            String decryptPassword=ValidationUtil.decrypt(password);
+            if(!ValidationUtil.isBlank(email,decryptPassword)){
                 logger.error("Invalid email or password format: {} , {}",email,password);
                 throw new IllegalArgumentException("email or password invalid");
             }
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, decryptPassword));
             logger.info("User logged in: {}",email);
             return ResponseEntity.ok(new JwtResponse(jwtService.generateToken(email), email, true,userRepository.findByEmail(email).orElseThrow().getRole().getName()));
         } catch (AuthenticationException ex) {

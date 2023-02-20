@@ -17,7 +17,11 @@ import org.springframework.stereotype.Service;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-
+/**
+ * CourseService is a class that provides various course related services like
+ * getting all courses, adding new course, updating course, deleting course,
+ * getting course by name, and enrolling in a course.
+ */
 @Service
 public class CourseService {
     static final String COURSE="COURSE";
@@ -26,12 +30,21 @@ public class CourseService {
     private CourseRepository courseRepository;
     @Autowired
     private UserRepository userRepository;
-
+    /**
+     * This method retrieves all courses from the database and returns them in a list.
+     *
+     * @return A ResponseEntity containing the list of all courses.
+     */
     public ResponseEntity<List<Course>> getAllCourses() {
         logger.info("Getting all courses");
         return ResponseEntity.ok(courseRepository.findAll());
     }
-
+    /**
+     * This method adds a new course to the database.
+     *
+     * @param newCourse A CourseDto object containing the details of the new course.
+     * @return A ResponseEntity containing the result of the operation.
+     */
     public ResponseEntity<AuthResponse> addCourse(CourseDto newCourse) throws InvocationTargetException, IllegalAccessException {
         if (courseRepository.existsByNameAndTrainer(newCourse.getName(), newCourse.getTrainer())) {
             throw new ResourceNotFoundException(newCourse.getName(), " already registered");
@@ -44,7 +57,14 @@ public class CourseService {
         courseRepository.save(CourseDtoToCourseEntity.convert(newCourse));
         return ResponseEntity.ok(new AuthResponse(newCourse.getName() + " added successfully", true));
     }
+    /**
+     * This method updates the details of an existing course in the database.
+     *
+     * @param id The id of the course to be updated.
+     * @param updatedCourse A CourseDto object containing the updated details.
+     * @return A ResponseEntity containing the result of the operation.
 
+     */
     public ResponseEntity<AuthResponse> updateCourse(long id, CourseDto updatedCourse) throws InvocationTargetException, IllegalAccessException {
         if (ValidationUtil.isBlank(updatedCourse) &&ValidationUtil.isBlank(id)) {
             logger.error("updateCourse id or course fields is empty");
@@ -61,7 +81,12 @@ public class CourseService {
         logger.info("Updating course");
         return ResponseEntity.ok(new AuthResponse(existingCourse.getName() + " updated successfully", true));
     }
-
+    /**
+     * This method deletes a course from the database.
+     *
+     * @param id The id of the course to be deleted.
+     * @return A ResponseEntity containing the result of the operation.
+     */
     public ResponseEntity<AuthResponse> deleteCourse(long id) {
         if (ValidationUtil.isBlank(id)) {
             logger.error("course id is empty");
@@ -72,7 +97,12 @@ public class CourseService {
         courseRepository.delete(courseToDelete);
         return ResponseEntity.ok(new AuthResponse(courseToDelete.getName() + " deleted successfully", true));
     }
-
+    /**
+     * This method retrieves a course from the database by its name.
+     *
+     * @param courseName The name of the course to be retrieved.
+     * @return A ResponseEntity containing the retrieved course.
+     */
     public ResponseEntity<Course> getCourseByName(String courseName) {
         if(ValidationUtil.isBlank(courseName)){
             logger.error("course name is empty");
@@ -81,7 +111,13 @@ public class CourseService {
         Course course = courseRepository.findByName(courseName).orElseThrow(() -> new ResourceNotFoundException(COURSE, courseName, "not exist"));
         return ResponseEntity.ok(course);
     }
-
+    /**
+     * This method enrolls a user in a course.
+     *
+     * @param email The email of the user to be enrolled.
+     * @param id The id of the course.
+     * @return A ResponseEntity containing the result of the operation.
+     */
     public ResponseEntity<AuthResponse> enrollCourse(String email, Long id) {
         Course course = courseRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(COURSE, id.toString(), "not exist"));
         User user = userRepository.findByEmail(email).orElseThrow(()->new ResourceNotFoundException("User",email,"not exist"));
